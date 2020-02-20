@@ -2,6 +2,7 @@ const glob = require('glob');
 const fs = require('fs');
 const path = require('path');
 const sizeOf = require('image-size');
+const PNGStream = require('canvas/lib/pngstream');
 const extractColors = require('./helpers/extractColors');
 const readImageData = require('./helpers/readImageData');
 const imageGenerator = require('../lib/textToImage');
@@ -26,6 +27,13 @@ describe('the text-to-image generator', () => {
       /^data:image\/png;base64/,
     );
   });
+
+  it('should generate an image stream', async () =>
+    imageGenerator
+      .generate('Hello world', { output: 'stream' })
+      .then(result => {
+        expect(result).toBeInstanceOf(PNGStream);
+      }));
 
   it('should create a png file in debug mode', () =>
     imageGenerator
